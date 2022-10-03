@@ -21,7 +21,11 @@
         <canvas id="canvas"></canvas>
     </p> -->
     <svg id="svg" onload="fixSize()"></svg>
-    <p><input id="size_bar" type="range" min="1" max="10"></p>
+    <p>
+        <input id="size_bar" type="range" min="1" max="10" style="vertical-align: middle;">
+        <label id="size" style="vertical-align: middle;"></label>
+        <input type="button" id="save" value="save">
+    </p>
     <p><input type="file" id="input" accept="image/png, image/jpeg"></p>
     <script src="src/index.js"></script>
 </body>
