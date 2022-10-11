@@ -180,7 +180,9 @@ function sushi(size) {
                 ctx.drawImage(image, sx, sy, N * D, N * D, 0, 0, N * D, N * D);
                 const a = document.createElement("a");
                 a.href = canvas.toDataURL("image/jpeg");
-                a.download = `${sy / (N * D)}-${sx / (N * D)}.jpeg`;
+                const y = Math.floor(sy / (N * D));
+                const x = Math.floor(sx / (N * D));
+                a.download = `${y}-${x}.jpeg`;
                 a.click();
             }
         }
