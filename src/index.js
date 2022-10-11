@@ -17,6 +17,7 @@ const ctx = canvas.getContext("2d");
 const img = new Image();
 const buf = new Array();
 const svg_h = 400;
+const threasholds = [50, 100, 150, 200];
 input.onchange = loadImage;
 function loadImage() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +36,8 @@ function loadImage() {
         const w = Math.floor(img.width / size);
         document.getElementById("size").textContent = `${h}x${w}`;
         document.getElementById("size").style.visibility = 'visible';
+        document.getElementById("thresholds").style.visibility = 'visible';
+        document.getElementById("reset").style.visibility = 'visible';
         sizeBar.style.visibility = 'visible';
         saveButton.style.visibility = 'visible';
         const len = img.height * img.width * 4;
@@ -81,7 +84,11 @@ function gyouza(size) {
             const R = buf[i + 0];
             const G = buf[i + 1];
             const B = buf[i + 2];
-            const Y = Math.floor((0.2126 * R + 0.7152 * G + 0.0722 * B) / 52) * 52;
+            const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+            let id = 0;
+            while (id < 4 && threasholds[id] < L)
+                id++;
+            const Y = 51 * id;
             const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.setAttribute('y', `${y0 * D}`);
             rect.setAttribute('x', `${x0 * D}`);
@@ -190,4 +197,51 @@ sizeBar.onchange = () => {
 saveButton.onclick = () => {
     const size = parseInt(sizeBar.value);
     sushi(size);
+};
+const threshold0 = document.getElementById("ts0");
+const threshold1 = document.getElementById("ts1");
+const threshold2 = document.getElementById("ts2");
+const threshold3 = document.getElementById("ts3");
+const drag = {
+    isMouseDown: false,
+    target: undefined,
+    offset: 0,
+};
+function handleMouseDown(ev, ts) {
+    drag.target = ts;
+    drag.isMouseDown = true;
+    drag.offset = ev.clientX - Number(ts.getAttribute('x'));
+}
+threshold0.onmousedown = (ev) => handleMouseDown(ev, threshold0);
+threshold1.onmousedown = (ev) => handleMouseDown(ev, threshold1);
+threshold2.onmousedown = (ev) => handleMouseDown(ev, threshold2);
+threshold3.onmousedown = (ev) => handleMouseDown(ev, threshold3);
+document.onmousemove = (ev) => {
+    if (!drag.isMouseDown)
+        return;
+    if (drag.target === undefined)
+        return;
+    const B = 400 / 50;
+    const cursorX = ev.clientX;
+    const newX = Math.min(49, Math.floor(cursorX / B)) * B;
+    drag.target.setAttribute('x', `${newX - drag.offset}`);
+};
+document.onmouseup = () => {
+    drag.isMouseDown = false;
+    drag.target = undefined;
+    threasholds[0] = Number(threshold0.getAttribute('x')) * 255 / 400;
+    threasholds[1] = Number(threshold1.getAttribute('x')) * 255 / 400;
+    threasholds[2] = Number(threshold2.getAttribute('x')) * 255 / 400;
+    threasholds[3] = Number(threshold3.getAttribute('x')) * 255 / 400;
+    threasholds.sort((a, b) => a - b);
+    const size = parseInt(sizeBar.value);
+    gyouza(size);
+};
+document.getElementById('reset').onclick = () => {
+    threasholds[0] = 50, threshold0.setAttribute('x', `${50 * 400 / 255}`);
+    threasholds[1] = 100, threshold1.setAttribute('x', `${100 * 400 / 255}`);
+    threasholds[2] = 150, threshold2.setAttribute('x', `${150 * 400 / 255}`);
+    threasholds[3] = 200, threshold3.setAttribute('x', `${200 * 400 / 255}`);
+    const size = parseInt(sizeBar.value);
+    gyouza(size);
 };
