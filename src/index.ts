@@ -121,7 +121,9 @@ function sushi(size: number) {
                 const R = buf[i + 0];
                 const G = buf[i + 1];
                 const B = buf[i + 2];
-                const id = Math.floor((0.2126 * R + 0.7152 * G + 0.0722 * B) / 52);
+                const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+                let id = 0;
+                while (id < 4 && threasholds[id] < L) id++;
                 const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                 rect.setAttribute('y', `${y0 * D}`);
                 rect.setAttribute('x', `${x0 * D}`);
