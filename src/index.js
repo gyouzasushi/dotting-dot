@@ -243,7 +243,6 @@ document.onmouseup = () => {
     threasholds[2] = Number(threshold2.getAttribute('x')) * 255 / 400;
     threasholds[3] = Number(threshold3.getAttribute('x')) * 255 / 400;
     threasholds.sort((a, b) => a - b);
-    console.log(threasholds);
     const size = parseInt(sizeBar.value);
     gyouza(size);
 };
