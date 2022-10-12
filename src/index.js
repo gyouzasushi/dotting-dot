@@ -17,7 +17,7 @@ const ctx = canvas.getContext("2d");
 const img = new Image();
 const buf = new Array();
 const svg_h = 400;
-const threasholds = [50, 100, 150, 200];
+const threasholds = [50, 100, 150, 200, 256];
 input.onchange = loadImage;
 function loadImage() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -86,9 +86,11 @@ function gyouza(size) {
             const B = buf[i + 2];
             const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
             let id = 0;
-            while (id < 4 && threasholds[id] < L)
-                id++;
-            const Y = 51 * id;
+            for (let j = 0; j < 4; j++) {
+                if (threasholds[j] <= L && L < threasholds[j + 1])
+                    id = j + 1;
+            }
+            const Y = 255 / 4 * id;
             const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.setAttribute('y', `${y0 * D}`);
             rect.setAttribute('x', `${x0 * D}`);
@@ -130,8 +132,10 @@ function sushi(size) {
                 const B = buf[i + 2];
                 const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
                 let id = 0;
-                while (id < 4 && L < threasholds[id])
-                    id++;
+                for (let j = 0; j < 4; j++) {
+                    if (threasholds[j] <= L && L < threasholds[j + 1])
+                        id = j + 1;
+                }
                 const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                 rect.setAttribute('y', `${y0 * D}`);
                 rect.setAttribute('x', `${x0 * D}`);
@@ -239,6 +243,7 @@ document.onmouseup = () => {
     threasholds[2] = Number(threshold2.getAttribute('x')) * 255 / 400;
     threasholds[3] = Number(threshold3.getAttribute('x')) * 255 / 400;
     threasholds.sort((a, b) => a - b);
+    console.log(threasholds);
     const size = parseInt(sizeBar.value);
     gyouza(size);
 };
