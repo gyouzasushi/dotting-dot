@@ -47,6 +47,7 @@ function loadImage() {
     });
 }
 function gyouza(size) {
+    const bg = ["#000000", "#777777", "#8c8c8c", "#9b9b9b", "#ffffff"];
     const h = Math.floor(img.height / size) * size;
     const w = Math.floor(img.width / size) * size;
     svg.setAttribute('width', `${svg_h / h * w}`);
@@ -90,26 +91,24 @@ function gyouza(size) {
                 if (threasholds[j] <= L && L < threasholds[j + 1])
                     id = j + 1;
             }
-            const Y = 255 / 4 * id;
             const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.setAttribute('y', `${y0 * D}`);
             rect.setAttribute('x', `${x0 * D}`);
             rect.setAttribute('height', `${D}`);
             rect.setAttribute('width', `${D}`);
-            rect.setAttribute('fill', `rgb(${Y}, ${Y}, ${Y})`);
-            rect.setAttribute('stroke', `rgb(${Y}, ${Y}, ${Y})`);
+            rect.setAttribute('fill', `${bg[id]}`);
+            rect.setAttribute('stroke', `${bg[id]}`);
             svg.appendChild(rect);
         }
     }
 }
-const bg = ["#cc0a0a", "#3a0bd6", "#00bfb6", "#73d60b", "#ccba0c"];
-const fg = ["#ff0000"];
 function sushi(size) {
+    const bg = ["#cc0a0a", "#3a0bd6", "#00bfb6", "#73d60b", "#ccba0c"];
     const h = Math.floor(img.height / size) * size;
     const w = Math.floor(img.width / size) * size;
-    const N = 29;
+    const N = 28;
     const DPI = 72;
-    const D = 5.71 * DPI / N;
+    const D = 2.95276 * DPI / N;
     const H = Math.ceil(Math.floor(img.height / size) / N) * N;
     const W = Math.ceil(Math.floor(img.width / size) / N) * N;
     const sushi = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
