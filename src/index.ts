@@ -259,11 +259,13 @@ document.getElementById('reset')!.onclick = () => {
 };
 
 function handleTouchStart(ev: TouchEvent, ts: HTMLElement) {
+    ev.preventDefault();
     drag.target = ts;
     drag.isMouseDown = true;
     drag.offset = ev.touches[0].clientX - Number(ts.getAttribute('x'));
 }
 function handleTouchMove(ev: TouchEvent) {
+    ev.preventDefault();
     if (!drag.isMouseDown) return;
     if (drag.target === undefined) return;
     const B = 400 / 50;
