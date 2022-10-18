@@ -5,6 +5,8 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d")!;
 const dottingCanvas = <HTMLCanvasElement>document.getElementById("dotting_canvas");
 const dottingCtx = dottingCanvas.getContext("2d")!;
+const plateSizeSelect = <HTMLSelectElement>document.getElementById("plate_size")!;
+const beadsSizeSelect = <HTMLSelectElement>document.getElementById("beads_size")!;
 const img = new Image();
 const buf = new Array<number>();
 const svg_h = 400;
@@ -32,6 +34,10 @@ async function loadImage() {
     document.getElementById("reset")!.style.visibility = 'visible';
     sizeBar.style.visibility = 'visible';
     saveButton.style.visibility = 'visible';
+    beadsSizeSelect.style.visibility = 'visible';
+    document.getElementById("beads_label")!.style.visibility = 'visible';
+    document.getElementById("plate_label")!.style.visibility = 'visible';
+    plateSizeSelect.style.visibility = 'visible';
     const len = img.height * img.width * 4;
     while (buf.length < len) buf.push(0);
     gyouza(size);
@@ -93,11 +99,9 @@ function sushi(size: number) {
     const bg = ["#cc0a0a", "#3a0bd6", "#00bfb6", "#73d60b", "#ccba0c"];
     const h = Math.floor(img.height / size) * size;
     const w = Math.floor(img.width / size) * size;
-    // const N = 28;
-    const N = 29;
+    const N = parseInt(plateSizeSelect.value);
     const DPI = 72;
-    // const D = 2.95276 * DPI / N;
-    const D = 5.71 * DPI / N;
+    const D = (beadsSizeSelect.value == "2.6" ? 0.10714285714 : 0.19685) * DPI;
     const H = Math.ceil(Math.floor(img.height / size) / N) * N;
     const W = Math.ceil(Math.floor(img.width / size) / N) * N;
 

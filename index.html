@@ -10,9 +10,8 @@
     <canvas id="dotting_canvas"></canvas>
     <p>
         <input id="size_bar" type="range" min="1" max="10" value="10"
-            style="vertical-align: middle; visibility: hidden; width: 340px;">
+            style="vertical-align: middle; visibility: hidden; width: 400px;">
         <label id="size" style="vertical-align: middle; visibility: hidden;"></label>
-        <input type="button" id="save" value="save" style="visibility: hidden">
     </p>
     <p>
         <svg id="thresholds" width="400" height="40" style="vertical-align: middle;visibility:hidden">
@@ -29,6 +28,19 @@
             <rect id="ts3" x="314" width="5" height="40" rx="3" fill="#61b640" />
         </svg>
         <input id="reset" type="button" value="reset" style="visibility: hidden">
+    </p>
+    <p>
+        <label id="plate_label" for="plate_size" style="visibility: hidden">plate:</label>
+        <select name="plate_size" id="plate_size" style="visibility: hidden">
+            <option value="29">29x29</option>
+            <option value="28">28x28</option>
+        </select>
+        <label id="beads_label" for="beads_size" style="visibility: hidden">beads:</label>
+        <select name="beads_size" id="beads_size" style="visibility: hidden">
+            <option value="5">5.0mm</option>
+            <option value="2.6">2.6mm</option>
+        </select>
+        <input type="button" id="save" value="save" style="visibility: hidden">
     </p>
     <p><input type="file" id="input" accept="image/png, image/jpeg"></p>
     <script src="src/index.js"></script>
