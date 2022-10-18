@@ -223,19 +223,15 @@ function handleMouseDown(ev: MouseEvent, ts: HTMLElement) {
     drag.isMouseDown = true;
     drag.offset = ev.clientX - Number(ts.getAttribute('x'));
 }
-threshold0.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold0);
-threshold1.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold1);
-threshold2.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold2);
-threshold3.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold3);
-document.onmousemove = (ev: MouseEvent) => {
+function handleMouseMove(ev: MouseEvent) {
     if (!drag.isMouseDown) return;
     if (drag.target === undefined) return;
     const B = 400 / 50;
     const cursorX = ev.clientX;
     const newX = Math.min(49, Math.floor(cursorX / B)) * B;
     drag.target.setAttribute('x', `${newX - drag.offset}`);
-};
-document.onmouseup = () => {
+}
+function handleMouseUp() {
     if (drag.target === undefined) return;
     drag.isMouseDown = false;
     drag.target = undefined;
@@ -247,6 +243,12 @@ document.onmouseup = () => {
     const size = parseInt(sizeBar.value);
     gyouza(size);
 }
+threshold0.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold0);
+threshold1.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold1);
+threshold2.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold2);
+threshold3.onmousedown = (ev: MouseEvent) => handleMouseDown(ev, threshold3);
+document.onmousemove = handleMouseMove;
+document.onmouseup = handleMouseUp;
 document.getElementById('reset')!.onclick = () => {
     threasholds[0] = 50, threshold0.setAttribute('x', `${50 * 400 / 255}`);
     threasholds[1] = 100, threshold1.setAttribute('x', `${100 * 400 / 255}`);
@@ -255,3 +257,35 @@ document.getElementById('reset')!.onclick = () => {
     const size = parseInt(sizeBar.value);
     gyouza(size);
 };
+
+function handleTouchStart(ev: TouchEvent, ts: HTMLElement) {
+    drag.target = ts;
+    drag.isMouseDown = true;
+    drag.offset = ev.touches[0].clientX - Number(ts.getAttribute('x'));
+}
+function handleTouchMove(ev: TouchEvent) {
+    if (!drag.isMouseDown) return;
+    if (drag.target === undefined) return;
+    const B = 400 / 50;
+    const cursorX = ev.touches[0].clientX;
+    const newX = Math.min(49, Math.floor(cursorX / B)) * B;
+    drag.target.setAttribute('x', `${newX - drag.offset}`);
+}
+function handleTouchEnd() {
+    if (drag.target === undefined) return;
+    drag.isMouseDown = false;
+    drag.target = undefined;
+    threasholds[0] = Number(threshold0.getAttribute('x')) * 255 / 400;
+    threasholds[1] = Number(threshold1.getAttribute('x')) * 255 / 400;
+    threasholds[2] = Number(threshold2.getAttribute('x')) * 255 / 400;
+    threasholds[3] = Number(threshold3.getAttribute('x')) * 255 / 400;
+    threasholds.sort((a, b) => a - b);
+    const size = parseInt(sizeBar.value);
+    gyouza(size);
+}
+threshold0.ontouchstart = (ev: TouchEvent) => handleTouchStart(ev, threshold0);
+threshold1.ontouchstart = (ev: TouchEvent) => handleTouchStart(ev, threshold1);
+threshold2.ontouchstart = (ev: TouchEvent) => handleTouchStart(ev, threshold2);
+threshold3.ontouchstart = (ev: TouchEvent) => handleTouchStart(ev, threshold3);
+document.ontouchmove = handleTouchMove;
+document.ontouchend = handleTouchEnd;
