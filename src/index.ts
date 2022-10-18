@@ -2,8 +2,9 @@ const input = <HTMLInputElement>document.getElementById("input")!;
 const sizeBar = <HTMLInputElement>document.getElementById("size_bar")!;
 const saveButton = <HTMLButtonElement>document.getElementById("save")!;
 const canvas = document.createElement("canvas");
-const svg = document.getElementById("svg")!;
 const ctx = canvas.getContext("2d")!;
+const dottingCanvas = <HTMLCanvasElement>document.getElementById("dotting_canvas");
+const dottingCtx = dottingCanvas.getContext("2d")!;
 const img = new Image();
 const buf = new Array<number>();
 const svg_h = 400;
@@ -37,10 +38,11 @@ async function loadImage() {
 }
 
 function gyouza(size: number) {
-    const bg = ["#000000", "#777777", "#8c8c8c", "#9b9b9b", "#ffffff"];
+    const bg = ["#000000", "#555555", "#8c8c8c", "#c8c8c8", "#ffffff"];
     const h = Math.floor(img.height / size) * size;
     const w = Math.floor(img.width / size) * size;
-    svg.setAttribute('width', `${svg_h / h * w}`);
+    dottingCanvas.height = svg_h;
+    dottingCanvas.width = svg_h / h * w;
     const imageData = ctx.getImageData(0, 0, w, h);
     const data = imageData.data;
     buf.fill(0);
@@ -65,9 +67,8 @@ function gyouza(size: number) {
             }
         }
     }
-    while (svg.lastChild) {
-        svg.removeChild(svg.lastChild);
-    }
+    dottingCtx.fillStyle = "white";
+    dottingCtx.fillRect(0, 0, dottingCanvas.width, dottingCanvas.height);
     const D = size * svg_h / h;
     for (let y = 0, y0 = 0; y < h; y += size, y0++) {
         for (let x = 0, x0 = 0; x < w; x += size, x0++) {
@@ -80,14 +81,10 @@ function gyouza(size: number) {
             for (let j = 0; j < 4; j++) {
                 if (threasholds[j] <= L && L < threasholds[j + 1]) id = j + 1;
             }
-            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.setAttribute('y', `${y0 * D}`);
-            rect.setAttribute('x', `${x0 * D}`);
-            rect.setAttribute('height', `${D}`);
-            rect.setAttribute('width', `${D}`);
-            rect.setAttribute('fill', `${bg[id]}`);
-            rect.setAttribute('stroke', `${bg[id]}`);
-            svg.appendChild(rect);
+            dottingCtx.fillStyle = `${bg[id]}`;
+            dottingCtx.fillRect(x0 * D, y0 * D, D, D);
+            dottingCtx.strokeStyle = `${bg[id]}`;
+            dottingCtx.strokeRect(x0 * D, y0 * D, D, D);
         }
     }
 }
@@ -235,6 +232,7 @@ document.onmousemove = (ev: MouseEvent) => {
     drag.target.setAttribute('x', `${newX - drag.offset}`);
 };
 document.onmouseup = () => {
+    if (drag.target === undefined) return;
     drag.isMouseDown = false;
     drag.target = undefined;
     threasholds[0] = Number(threshold0.getAttribute('x')) * 255 / 400;

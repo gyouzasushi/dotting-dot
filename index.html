@@ -4,20 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <title>dotting-dot</title>
-    <script>
-        'use strict';
-        function fixSize() {
-            let x = 400;
-            let y = 400;
-            let svg = document.getElementById('svg');
-            svg.setAttribute('height', y);
-            svg.setAttribute('width', x);
-        }
-    </script>
 </head>
 
 <body>
-    <svg id="svg" onload="fixSize()"></svg>
+    <canvas id="dotting_canvas"></canvas>
     <p>
         <input id="size_bar" type="range" min="1" max="10" value="10"
             style="vertical-align: middle; visibility: hidden; width: 340px;">
